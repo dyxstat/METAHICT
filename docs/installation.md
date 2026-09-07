@@ -22,7 +22,7 @@ tar --version
 git --version
 ```
 
-## Download
+## Recommended local installation
 
 ```bash
 git clone https://github.com/dyxstat/METAHICT.git
@@ -66,6 +66,39 @@ workflow engine and stage connections.
 
 Developers changing METAHICT source can additionally run
 `./metahict test source`; ordinary installations do not require that test.
+
+## Optional Bioconda installation
+
+Bioconda provides the METAHICT workflow layer as an alternative to the local
+installation above. The local installation remains recommended because its
+workflow files, lock files, documentation, and example dataset stay together.
+
+```bash
+conda create -p /path/to/metahict-bioconda-v1.2.0 \
+  --strict-channel-priority \
+  -c conda-forge \
+  -c bioconda \
+  metahict=1.2.0
+conda activate /path/to/metahict-bioconda-v1.2.0
+metahict doctor
+metahict install
+metahict test workflow
+```
+
+Replace `/path/to/metahict-bioconda-v1.2.0` with an absolute path on a volume
+that has sufficient space. The Bioconda environment and all scientific
+environments created by `metahict install` will remain below that prefix.
+
+The Bioconda package installs the launcher, Nextflow, and workflow files.
+`metahict install` creates the locked scientific environments below
+`$CONDA_PREFIX/share/metahict/conda_envs`. Databases can be linked below
+`$CONDA_PREFIX/share/metahict/databases` or passed through the database
+options shown later on this page.
+
+The Bioconda package does not include the example FASTQ files. This does not
+affect the workflow stub or analyses using a user samplesheet. See [Testing
+METAHICT](test_dataset.md) when running the real example test from a Bioconda
+installation.
 
 ## Install the reference databases
 

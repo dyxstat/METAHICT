@@ -1039,6 +1039,23 @@ class ExampleScaffoldingTest(unittest.TestCase):
         self.assertEqual(args.outdir, "results")
         self.assertTrue(str(args.config).endswith("example_dataset_configuration.yaml"))
 
+    def test_missing_example_reads_fail_before_nextflow(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            samplesheet = root / "samplesheet.csv"
+            samplesheet.write_text(
+                "sample,sg1,sg2,hic1,hic2,enzyme,long_read_type\n"
+                "sample_01,example_dataset/sg_R1.fastq.gz,"
+                "example_dataset/sg_R2.fastq.gz,"
+                "example_dataset/hic_R1.fastq.gz,"
+                "example_dataset/hic_R2.fastq.gz,Sau3AI,\n"
+            )
+            with mock.patch.object(manager, "PROJECT_ROOT", root):
+                with self.assertRaisesRegex(
+                    manager.MetahictError, "example dataset is not available"
+                ):
+                    manager.validate_example_dataset_inputs(samplesheet)
+
 
 class TopLevelHelpTest(unittest.TestCase):
     def test_top_level_help_is_a_first_run_guide(self) -> None:

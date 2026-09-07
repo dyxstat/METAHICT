@@ -1351,10 +1351,36 @@ def append_example_database_options(command: list[str], args: argparse.Namespace
             )
 
 
+def validate_example_dataset_inputs(samplesheet: Path) -> None:
+    """Fail early when a distribution does not contain the example reads."""
+    missing: list[Path] = []
+    for row in sample_rows(samplesheet):
+        for column in ("sg1", "sg2", "hic1", "hic2"):
+            value = (row.get(column) or "").strip()
+            if not value:
+                continue
+            path = Path(value).expanduser()
+            if not path.is_absolute():
+                path = PROJECT_ROOT / path
+            if not path.is_file():
+                missing.append(path)
+    if missing:
+        formatted = "\n  ".join(str(path) for path in missing)
+        raise MetahictError(
+            "The example dataset is not available in this METAHICT installation:\n  "
+            f"{formatted}\n"
+            "Run `metahict test workflow` for the dependency-free installation "
+            "test. To run the real example from a Bioconda installation, "
+            "download the GitHub v1.2.0 `example_dataset` directory into "
+            f"{PROJECT_ROOT / 'example_dataset'} as described in README.md."
+        )
+
+
 def run_example_test(args: argparse.Namespace) -> None:
     """Run the bundled data through core stages and optional scaffolding."""
     results = Path(args.outdir).expanduser().resolve()
     samplesheet = PROJECT_ROOT / "nextflow" / "assets" / "example_dataset_samplesheet.csv"
+    validate_example_dataset_inputs(samplesheet)
     config = Path(args.config).expanduser().resolve()
     base = [
         "run",

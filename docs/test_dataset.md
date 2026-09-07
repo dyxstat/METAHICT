@@ -43,7 +43,7 @@ example.
 
 ## 3. Run the bundled example
 
-The repository includes synchronized paired shotgun and Hi-C reads under
+The GitHub release includes synchronized paired shotgun and Hi-C reads under
 `example_dataset/`. They are a compact functional test, not an unbiased
 biological benchmark.
 
@@ -52,6 +52,23 @@ Run the core workflow, scaffold the recovered MAGs, and validate the outputs:
 ```bash
 ./metahict test example --outdir results
 ```
+
+**Bioconda installation:**
+
+The example FASTQ files are distributed with the GitHub release rather than
+inside the Bioconda package. Add them once before running the real example
+test:
+
+```bash
+curl -fL https://github.com/dyxstat/METAHICT/archive/refs/tags/v1.2.0.tar.gz | \
+  tar -xzf - --strip-components=1 \
+    -C "$CONDA_PREFIX/share/metahict" \
+    METAHICT-1.2.0/example_dataset
+metahict test example --outdir results
+```
+
+The command extracts only `example_dataset/` into the installed METAHICT
+directory. It creates neither a source checkout nor a symbolic link.
 
 This command runs the actual scientific programs and databases. It first runs
 the normal complete workflow, which excludes scaffolding, and then invokes the
