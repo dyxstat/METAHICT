@@ -10,7 +10,7 @@ detection of mobile genetic elements (MGEs) and candidate MGE–host pairs.
 
 ## Requirements
 
-METAHICT 1.2.0 supports and tests on 64-bit x86 Linux systems. The host must
+METAHICT 1.2.0 supports and tests on Linux systems. The host must
 provide Conda, `curl`, `tar`, and Git. Python, Nextflow, and the scientific
 programs are installed into METAHICT-managed environments.
 
@@ -30,7 +30,7 @@ chmod +x metahict nextflow/bin/nextflow
 ```
 
 This installation keeps the workflow, locked scientific environments,
-documentation, and example dataset together.
+documentation, and example dataset together. Typical installation time is 5–10 minutes, excluding database installation.
 
 ### Optional: Bioconda
 
